@@ -1,0 +1,25 @@
+#!/bin/bash
+
+TARGET=$1
+
+if [ ! -z $! ]; then
+    echo "Filename is required"
+    exit 1
+fi
+
+COUNT=${2:-999}
+OUTPUT=$TARGET.split
+
+mkdir $OUTPUT
+
+tail -n +2 $TARGET | split -l $COUNT - split_
+
+for file in split_*
+do
+    head -n 1 $TARGET > tmp_file
+    cat $file >> tmp_file
+    mv -f tmp_file $OUTPUT/$file.csv
+    rm $file
+done
+
+echo "all done!"
